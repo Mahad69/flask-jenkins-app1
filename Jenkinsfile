@@ -1,24 +1,20 @@
 pipeline {
     agent any
 
-    triggers {
-        githubPush()
-    }
-
     stages {
 
         stage('Clone Repository') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/Mahad69/flask-jenkins-app.git'
+                    url: 'https://github.com/Mahad69/flask-jenkins-app1.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                python3 -m venv venv
-                . venv/bin/activate
+                bat '''
+                python -m venv venv
+                venv\\Scripts\\activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
                 '''
@@ -27,8 +23,8 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                sh '''
-                . venv/bin/activate
+                bat '''
+                venv\\Scripts\\activate
                 pytest
                 '''
             }
@@ -36,19 +32,19 @@ pipeline {
 
         stage('Build Application') {
             steps {
-                sh '''
-                mkdir -p build
-                cp *.py build/
+                bat '''
+                if not exist build mkdir build
+                copy *.py build
                 '''
             }
         }
 
         stage('Deploy Application') {
             steps {
-                sh '''
-                mkdir -p /tmp/flask_deploy
-                cp build/* /tmp/flask_deploy/
-                echo "Deployment Successful"
+                bat '''
+                if not exist C:\\flask_deploy mkdir C:\\flask_deploy
+                copy build\\* C:\\flask_deploy
+                echo Deployment Successful
                 '''
             }
         }
